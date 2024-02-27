@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>spark_connect_dotnet</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Apache.Arrow" Version="15.0.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.13.0" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.32.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.40.0">
+  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    <PrivateAssets>all</PrivateAssets>
+  </PackageReference>
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="spark\connect\base.proto" GrpcServices="Client" />
+    <Protobuf Include="spark\connect\catalog.proto" GrpcServices="Client" />
+    <Protobuf Include="spark\connect\commands.proto" GrpcServices="Client" />
+    <Protobuf Include="spark\connect\common.proto" GrpcServices="Client" />
+    <Protobuf Include="spark\connect\example_plugins.proto" GrpcServices="Client" />
+    <Protobuf Include="spark\connect\expressions.proto" GrpcServices="Client" />
+    <Protobuf Include="spark\connect\relations.proto" GrpcServices="Client" />
+    <Protobuf Include="spark\connect\types.proto" GrpcServices="Client" />
+  </ItemGroup>
+</Project>
