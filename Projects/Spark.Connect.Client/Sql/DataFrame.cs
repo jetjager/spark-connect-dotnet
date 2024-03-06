@@ -1,5 +1,7 @@
 using Spark.Connect;
 
+namespace Spark.Connect.Client.Sql;
+using Spark.Connect.Client.Helpers;
 public class DataFrame
 {
     private readonly SparkSession _sparkSession;

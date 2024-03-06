@@ -1,4 +1,5 @@
 
+namespace Spark.Connect.Client.Sql;
 
 public class StructField
 {

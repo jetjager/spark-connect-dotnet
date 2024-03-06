@@ -5,14 +5,12 @@ I hope to build on the repository and implement the same Spark API as we have in
 ## Quick start
 - Follow the guide on https://spark.apache.org/docs/latest/spark-connect-overview.html#download-and-start-spark-server-with-spark-connect to start a Spark server with Spark Connect.
 - In this case the Spark Connect service is at http://localhost:15002
-- In the root of the repository run `dotnet run` to run the example below:
+- In the root of the repository run `dotnet run --project Projects/Spark.Connect.Examples` to run the example below:
 
 ```C#
+using Spark.Connect.Client;
 // Connect to Spark Connect via the default port
-using var channel = GrpcChannel.ForAddress("http://localhost:15002");
-var client = new SparkConnectService.SparkConnectServiceClient(channel);
-var userContext = new UserContext();
-var session = new SparkSession(client, userContext);
+var session = new SparkConnectClient("http://localhost:15002").CreateSession();
 
 var version = session.Version;
 Console.WriteLine("SparkVersion is: " + version);

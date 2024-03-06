@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>spark_connect_dotnet</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -26,4 +25,5 @@
     <Protobuf Include="spark\connect\relations.proto" GrpcServices="Client" />
     <Protobuf Include="spark\connect\types.proto" GrpcServices="Client" />
   </ItemGroup>
+
 </Project>

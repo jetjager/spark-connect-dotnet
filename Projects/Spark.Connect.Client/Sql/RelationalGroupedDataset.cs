@@ -2,6 +2,8 @@ using System.Globalization;
 using Spark.Connect;
 using static Spark.Connect.Aggregate.Types;
 
+namespace Spark.Connect.Client.Sql;
+
 public class RelationalGroupedDataset
 {
 

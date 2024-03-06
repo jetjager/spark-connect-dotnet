@@ -1,3 +1,5 @@
+namespace Spark.Connect.Client.Helpers;
+
 public class PlanIdGenerator
 {
     private static long atomicInt64 = 0;

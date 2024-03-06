@@ -1,15 +1,8 @@
 ﻿
-//dotnet-grpc add-url --service Client https://github.com/apache/spark/tree/master/connector/connect/common/src/main/protobuf
-
-// See https://aka.ms/new-console-template for more information
-using Grpc.Net.Client;
-using Spark.Connect;
+using Spark.Connect.Client;
 
 // Connect to Spark Connect via the default port
-using var channel = GrpcChannel.ForAddress("http://localhost:15002");
-var client = new SparkConnectService.SparkConnectServiceClient(channel);
-var userContext = new UserContext();
-var session = new SparkSession(client, userContext);
+var session = new SparkConnectClient("http://localhost:15002").CreateSession();
 
 var version = session.Version;
 Console.WriteLine("SparkVersion is: " + version);

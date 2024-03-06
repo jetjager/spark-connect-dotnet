@@ -1,3 +1,6 @@
+
+namespace Spark.Connect.Client.Sql;
+
 public interface IDataType
 {
     string TypeName();

@@ -1,6 +1,8 @@
 using Apache.Arrow;
 using Apache.Arrow.Ipc;
 using Spark.Connect;
+using Spark.Connect.Client.Sql;
+namespace Spark.Connect.Client.Helpers;
 
 public class ArrowFunctions
 {

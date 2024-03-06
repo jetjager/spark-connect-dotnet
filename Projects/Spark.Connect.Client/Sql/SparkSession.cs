@@ -2,7 +2,9 @@ using Grpc.Core;
 using Spark.Connect;
 using static Spark.Connect.SparkConnectService;
 using static Spark.Connect.AnalyzePlanRequest;
+using Spark.Connect.Client.Helpers;
 
+namespace Spark.Connect.Client.Sql;
 
 // Assuming DeveloperApi and Experimental are custom attributes you'll define or map accordingly
 public class SparkSession
