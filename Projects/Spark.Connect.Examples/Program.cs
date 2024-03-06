@@ -19,12 +19,6 @@ select 'C#' as Language, 2000 as Year
 ");
 
 
-df.OrderBy("Year").ShowString(20, false);
-df.Filter("Year >= 2000").ShowString(20, false);
-
-df.SelectExpr("lower(Language) as Language", "Year - 2000 as YearsAfter2000").ShowString(20, false);
-
-df.SelectExpr("*", "Year - 2000 as YearsAfter2000")
-  .GroupBy("YearsAfter2000")
-  .Agg(("Year", "average"))
-  .ShowString(20, false);
+var rows = df.Collect();
+Console.WriteLine("Number of Rows: " + rows.Count);
+rows.ForEach(Console.WriteLine);

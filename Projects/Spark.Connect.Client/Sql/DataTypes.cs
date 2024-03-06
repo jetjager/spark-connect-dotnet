@@ -17,72 +17,72 @@ public interface IDataType
     }
 }
 
-public class BooleanType : IDataType
+public record BooleanType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class ByteType : IDataType
+public record ByteType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class ShortType : IDataType
+public record ShortType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class IntegerType : IDataType
+public record IntegerType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class LongType : IDataType
+public record LongType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class FloatType : IDataType
+public record FloatType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class DoubleType : IDataType
+public record DoubleType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class DecimalType : IDataType
+public record DecimalType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class StringType : IDataType
+public record StringType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class BinaryType : IDataType
+public record BinaryType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class TimestampType : IDataType
+public record TimestampType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class TimestampNtzType : IDataType
+public record TimestampNtzType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class DateType : IDataType
+public record DateType : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }
 
-public class UnsupportedType : IDataType
+public record UnsupportedType(object TypeInfo) : IDataType
 {
     public string TypeName() => IDataType.GetDataTypeName(this);
 }

@@ -1,6 +1,8 @@
 using Spark.Connect;
 
 namespace Spark.Connect.Client.Sql;
+
+using System.ComponentModel.DataAnnotations;
 using Spark.Connect.Client.Helpers;
 public class DataFrame
 {
@@ -46,6 +48,33 @@ public class DataFrame
         all.ToBlockingEnumerable().ToList().ForEach(row => row.ForEach(r => Console.WriteLine(r.Values()[0])));
 
     }
+
+    public List<IRow> Collect()
+    {
+        var newRelation = _relation.Clone();
+        newRelation.Common = new RelationCommon
+        {
+            PlanId = PlanIdGenerator.NewPlanId()
+        };
+
+        var plan = new Plan
+        {
+            Root = new Relation(newRelation)
+        };
+
+        var responseClient = _sparkSession.ExecutePlan(plan);
+        var all = Utils.ReadExecutedPlan(responseClient).ToBlockingEnumerable().ToList();
+        var responseSchema = all.First(x => x.Schema != null).Schema;
+
+        var fields = Conversions.ConvertProtoStructFields(responseSchema.Struct.Fields.ToList());
+        var schema = new StructType("", fields); // todo what is the typename is this case?
+        
+        var rows = all.Where(x => x.ResponseTypeCase == ExecutePlanResponse.ResponseTypeOneofCase.ArrowBatch)
+                         .SelectMany(response => ArrowFunctions.ReadArrowBatchData(response.ArrowBatch.Data.ToByteArray(), schema)).ToList();
+
+        return rows;
+    }
+
     /// <summary>
     /// Filters rows using the given condition.
     /// </summary>

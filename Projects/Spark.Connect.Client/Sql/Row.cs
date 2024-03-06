@@ -27,4 +27,9 @@ public class GenericRowWithSchema : IRow
     {
         return _values;
     }
+
+    override public string ToString()
+    {
+        return string.Join(", ", Values()); // TODO: what is a good string representation?
+    }
 }
