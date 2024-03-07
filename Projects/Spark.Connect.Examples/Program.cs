@@ -6,6 +6,9 @@ var session = new SparkConnectClient("http://localhost:15002").CreateSession();
 
 var version = session.Version;
 Console.WriteLine("SparkVersion is: " + version);
+/* Outputs
+SparkVersion is: { "version": "3.5.0" } 
+*/
 
 var df = session.Sql(
 @"
@@ -19,6 +22,52 @@ select 'C#' as Language, 2000 as Year
 ");
 
 
-var rows = df.Collect();
-Console.WriteLine("Number of Rows: " + rows.Count);
-rows.ForEach(Console.WriteLine);
+df.OrderBy("Year").ShowString(20, false);
+/* Outputs
++--------+----+
+|Language|Year|
++--------+----+
+|Scala   |2001|
+|C#      |2000|
+|R       |1993|
+|Python  |1991|
++--------+----+
+*/
+
+
+df.Filter("Year >= 2000").ShowString(20, false);
+/* Outputs
++--------+----+
+|Language|Year|
++--------+----+
+|Scala   |2001|
+|C#      |2000|
++--------+----+
+*/
+
+df.SelectExpr("lower(Language) as Language", "Year - 2000 as YearsAfter2000").ShowString(20, false);
+/* Outputs
++--------+--------------+
+|Language|YearsAfter2000|
++--------+--------------+
+|scala   |1             |
+|python  |-9            |
+|r       |-7            |
+|c#      |0             |
++--------+--------------+
+*/
+
+df.SelectExpr("*", "Year - 2000 as YearsAfter2000")
+  .GroupBy("YearsAfter2000")
+  .Agg(("Year", "average"))
+  .ShowString(20, false);
+/* Outputs
++--------------+---------+
+|YearsAfter2000|avg(Year)|
++--------------+---------+
+|1             |2001.0   |
+|-9            |1991.0   |
+|-7            |1993.0   |
+|0             |2000.0   |
++--------------+---------+
+*/
