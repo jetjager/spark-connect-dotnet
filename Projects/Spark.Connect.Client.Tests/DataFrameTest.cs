@@ -75,13 +75,13 @@ public class DataFrameTests
     }
 
 
-    public void EqualRowsContents(string sql, DataFrame actual)
+    private void EqualRowsContents(string sql, DataFrame actual)
     {
         var expected = _session.Sql(sql);
         EqualRowsContents(expected, actual);
     }
 
-    public void EqualRowsContents(DataFrame expected, DataFrame actual)
+    private void EqualRowsContents(DataFrame expected, DataFrame actual)
     {
         var expectedRows = expected.Collect().Select(row => row.Values());
         var actualRows = actual.Collect().Select(row => row.Values());
@@ -90,7 +90,7 @@ public class DataFrameTests
     }
 
 
-    public void EqualRowsContents(object[][] expected, DataFrame actual)
+    private void EqualRowsContents(object[][] expected, DataFrame actual)
     {
         var actualRows = actual.Collect().Select(row => row.Values());
 
