@@ -106,6 +106,19 @@ public class DataFrame
         return new DataFrame(_sparkSession, newRelation);
     }
 
+    public DataFrame Filter(Column condition) {
+        var newRelation = new Relation()
+        {
+            Filter = new Filter
+            {
+                Input = _relation,
+                Condition = condition.expr
+            }
+        };
+
+        return new DataFrame(_sparkSession, newRelation);
+    }
+
     /// <summary>
     /// Selects a set of SQL expressions. This is a variant of <c>Select</c> that accepts
     /// SQL expressions.

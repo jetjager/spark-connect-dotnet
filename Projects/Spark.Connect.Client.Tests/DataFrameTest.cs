@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Spark.Connect.Client.Sql;
-
+using static Spark.Connect.Client.Sql.Functions;
 namespace Spark.Connect.Client.Tests;
 
 public class DataFrameTests
@@ -39,7 +39,7 @@ public class DataFrameTests
 
 
     [Fact]
-    public void Filter_ProgrammingLanguages()
+    public void Filter_StringCondition()
     {
         // Act
         var actual = _dataFrameProgramingLanguages.Filter("Language='Scala'");
@@ -48,6 +48,16 @@ public class DataFrameTests
         EqualRowsContents([["Scala", 2001]], actual);
     }
 
+   [Fact]
+    public void Filter_ColumnCondition() {
+        // Arrange
+        var df = _session.Sql("select 3.14 as number union select cast('NaN' as double) as number");
+
+        // Act
+        var actual = df.Filter(Col("number").IsNaN());
+
+        EqualRowsContents([[double.NaN]], actual);
+    }
 
     [Fact]
     public void SelectExpr_ProjectsColumns()
@@ -74,6 +84,7 @@ public class DataFrameTests
         EqualRowsContents([["SUV", 2017.5], ["Sedan", 2014.5]], actual);
     }
 
+ 
 
     private void EqualRowsContents(string sql, DataFrame actual)
     {
