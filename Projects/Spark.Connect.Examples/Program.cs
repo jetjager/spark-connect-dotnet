@@ -27,10 +27,10 @@ df.OrderBy("Year").ShowString(20, false);
 +--------+----+
 |Language|Year|
 +--------+----+
-|Scala   |2001|
-|C#      |2000|
-|R       |1993|
 |Python  |1991|
+|R       |1993|
+|C#      |2000|
+|Scala   |2001|
 +--------+----+
 */
 

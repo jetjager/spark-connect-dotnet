@@ -68,7 +68,7 @@ public class DataFrame
 
         var fields = Conversions.ConvertProtoStructFields(responseSchema.Struct.Fields.ToList());
         var schema = new StructType("", fields); // todo what is the typename is this case?
-        
+
         var rows = all.Where(x => x.ResponseTypeCase == ExecutePlanResponse.ResponseTypeOneofCase.ArrowBatch)
                          .SelectMany(response => ArrowFunctions.ReadArrowBatchData(response.ArrowBatch.Data.ToByteArray(), schema)).ToList();
 
@@ -106,7 +106,8 @@ public class DataFrame
         return new DataFrame(_sparkSession, newRelation);
     }
 
-    public DataFrame Filter(Column condition) {
+    public DataFrame Filter(Column condition)
+    {
         var newRelation = new Relation()
         {
             Filter = new Filter
@@ -159,33 +160,90 @@ public class DataFrame
     }
 
     /// <summary>
-    /// Returns a new Dataset sorted by the given expressions. This is an alias of the `sort` function.
+    /// Selects a set of column based expressions.
+    /// Example:
+    ///   ds.Select(new Column("colA"), new Column("colB").Plus(1))
     /// </summary>
-    /// <param name="sortCols"></param>
-    /// <returns></returns>
-    public DataFrame OrderBy(params string[] sortCols)
+    /// <param name="cols">The columns and expressions to select.</param>
+    /// <returns>A new DataFrame with the selected columns and expressions.</returns>
+    public DataFrame Select(params Column[] cols)
     {
-        var orders = sortCols.Select(expr => new Expression.Types.SortOrder
-        {
-            Child = new Expression
-            {
-                ExpressionString = new Expression.Types.ExpressionString
-                {
-                    Expression = expr
-                }
-            }
-        });
+
         var newRelation = new Relation()
         {
-            Sort = new Sort
+            Project = new Project
             {
                 Input = _relation,
-                Order = { orders }
+                Expressions = { cols.Select(col => col.expr) }
             }
         };
 
         return new DataFrame(_sparkSession, newRelation);
     }
+
+
+    /// <summary>
+    /// Returns a new Dataset sorted by the given expressions. This is an alias of the `sort` function.
+    /// </summary>
+    /// <param name="sortCols"></param>
+    /// <returns></returns>
+    public DataFrame OrderBy(params string[] sortCols) => Sort(sortCols);
+
+    // Methods for sorting datasets
+
+    /// <summary>
+    /// Returns a new Dataset sorted by the specified column, all in ascending order.
+    /// Examples:
+    ///   // The following 3 are equivalent
+    ///   ds.Sort("sortcol");
+    ///   ds.Sort(new Column("sortcol"));
+    ///   ds.Sort(new Column("sortcol").Asc());
+    /// </summary>
+    /// <param name="sortCols">columns to sort by.</param>
+    /// <returns>A new Dataset sorted by the specified columns.</returns>
+    public DataFrame Sort(params string[] sortCols) => Sort(sortCols.Select(c => new Column(c)).ToArray());
+
+    /// <summary>
+    /// Returns a new Dataset sorted by the given expressions. For example:
+    ///   ds.Sort(new Column("col1"), new Column("col2").Desc());
+    /// </summary>
+    /// <param name="sortExprs">The columns and expressions to sort by.</param>
+    /// <returns>A new Dataset sorted by the specified expressions.</returns>
+    public DataFrame Sort(params Column[] sortExprs)
+    {
+        // Assume buildSort is a method implemented elsewhere that applies the sorting
+        // to the dataset based on the given columns and returns the sorted dataset.
+        return BuildSort(global: true, sortExprs);
+    }
+
+    /// <summary>
+    /// Returns a new Dataset sorted by the given expressions. This is an alias of the Sort function.
+    /// </summary>
+    /// <param name="sortExprs">The columns and expressions to sort by.</param>
+    /// <returns>A new Dataset sorted by the specified expressions.</returns>
+    public DataFrame OrderBy(params Column[] sortExprs)
+    {
+        return Sort(sortExprs);
+    }
+
+    private DataFrame BuildSort(bool global, params Column[] sortColumns)
+    {
+
+        var orders = sortColumns.Select(col => col.expr.SortOrder ?? col.Asc().expr.SortOrder);
+
+        var newRelation = new Relation()
+        {
+            Sort = new Sort
+            {
+                Input = _relation,
+                Order = { orders },
+                IsGlobal = global
+            }
+        };
+
+        return new DataFrame(_sparkSession, newRelation);
+    }
+
 
     public RelationalGroupedDataset GroupBy(params string[] cols)
     {

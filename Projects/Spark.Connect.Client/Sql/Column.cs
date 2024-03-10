@@ -2,6 +2,7 @@
 using Spark.Connect;
 using static Spark.Connect.Expression.Types;
 using static Spark.Connect.Client.Sql.Functions;
+using static Spark.Connect.Expression.Types.SortOrder.Types;
 namespace Spark.Connect.Client.Sql;
 
 public class Column(Expression expr)
@@ -56,6 +57,67 @@ public class Column(Expression expr)
 
         return new Column(newExpr);
     }
+
+    // Sort functions
+
+    /// <summary>
+    /// Returns a sort expression based on the descending order of the column.
+    /// Usage: df.Sort(df["age"].Desc)
+    /// </summary>
+    public Column Desc() => DescNullsLast();
+
+    /// <summary>
+    /// Returns a sort expression based on the descending order of the column, and null values appear
+    /// before non-null values.
+    /// Usage: df.Sort(df["age"].DescNullsFirst)
+    /// </summary>
+    public Column DescNullsFirst() => BuildSortOrder(SortDirection.Descending, NullOrdering.SortNullsFirst);
+
+    /// <summary>
+    /// Returns a sort expression based on the descending order of the column, and null values appear
+    /// after non-null values.
+    /// Usage: df.Sort(df["age"].DescNullsLast)
+    /// </summary>
+    public Column DescNullsLast() => BuildSortOrder(SortDirection.Descending, NullOrdering.SortNullsLast);
+
+    /// <summary>
+    /// Returns a sort expression based on ascending order of the column.
+    /// Usage: df.Sort(df["age"].Asc)
+    /// </summary>
+    public Column Asc() => AscNullsFirst();
+
+    /// <summary>
+    /// Returns a sort expression based on ascending order of the column, and null values return
+    /// before non-null values.
+    /// Usage: df.Sort(df["age"].AscNullsFirst)
+    /// </summary>
+    public Column AscNullsFirst() => BuildSortOrder(SortDirection.Ascending, NullOrdering.SortNullsFirst);
+
+    /// <summary>
+    /// Returns a sort expression based on ascending order of the column, and null values appear
+    /// after non-null values.
+    /// Usage: df.Sort(df["age"].AscNullsLast)
+    /// </summary>
+    public Column AscNullsLast() => BuildSortOrder(SortDirection.Ascending, NullOrdering.SortNullsLast);
+
+    private Column BuildSortOrder(SortDirection sortDirection, NullOrdering nullOrdering)
+    {
+
+        var sortedExpr  = new Expression
+        {
+            SortOrder = new SortOrder
+            {
+                Child = expr,
+                Direction = sortDirection,
+                NullOrdering = nullOrdering,
+            }
+        };
+
+        return new Column(sortedExpr);
+    }
+
+
+
 
     public Column IsNaN() => Fn("isNaN");
 
