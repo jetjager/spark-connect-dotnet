@@ -7,7 +7,7 @@ using static Spark.Connect.Expression;
 
 namespace Spark.Connect.Client.Sql;
 
-public static class Functions
+public static partial class Functions
 {
     /// <summary>
     /// Returns a Column based on the given column name.
